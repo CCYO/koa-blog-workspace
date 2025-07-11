@@ -10,7 +10,7 @@
     "src/css/",
     "src/_views/"
   ],
-  "//verbose": false,
-  "exec": "node server/bin/www.js",
+  "verbose": true,
+  "exec": "node --inspect=9229 server/bin/www.js",
   "ext": "js,mjs,json,ejs"
 }

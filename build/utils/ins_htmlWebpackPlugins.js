@@ -15,7 +15,7 @@ const glob = require("glob");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 /* VAR        ----------------------------------------------------------------------------- */
-
+let dist = "";
 /* EXPORT     ----------------------------------------------------------------------------- */
 module.exports = (function () {
   const result = [];
@@ -39,17 +39,29 @@ module.exports = (function () {
     const isPageIndex = isPage && !isTemplate && !isComponent;
     let index_views = array_filepath.findIndex((item) => item === "views");
 
-    let target_folder;
-
     if (isTemplate) {
       return;
     }
-    // src -> server
-    array_filepath[index_views - 1] = "server";
-    if (!WEBPACK.ENV.isProd) {
-      // views -> dev_views
-      array_filepath[index_views] = "dev_views";
+    array_filepath[index_views - 1] = WEBPACK.ENV.isProd ? "server" : "dist";
+
+    if (!WEBPACK.ENV.isProd && !dist) {
+      // array_filepath[index_views - 1] = "dist";
+
+      dist = array_filepath.reduce((target_folder, folder, i) => {
+        if (folder !== "dist") {
+          target_folder += `/${folder}`;
+        }
+        return target_folder;
+      }, "");
+      fs.mkdirSync(dist);
     }
+    // src -> server
+    // array_filepath[index_views - 1] = WEBPACK.ENV.isProd ? "server" : "dist";
+    // array_filepath[index_views - 1] = "server";
+    // if (!WEBPACK.ENV.isProd) {
+    //   // views -> dev_views
+    //   array_filepath[index_views] = "dev_views";
+    // }
 
     array_filepath.findIndex((folder) => folder);
     //  創建 server/[dev_]views 內，除了 isPageIndex 以外的 ejs

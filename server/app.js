@@ -1,7 +1,7 @@
 /* CONFIG     ----------------------------------------------------------------------------- */
 const { ENV } = require("./config");
 const { WEBPACK } = require("../build/config");
-const { SESSION_KEY } = require("./_config");
+// const { SESSION_KEY } = require("./_config");
 
 /* NPM        ----------------------------------------------------------------------------- */
 const Koa = require("koa");
@@ -13,22 +13,25 @@ const koaViews = require("@ladjs/koa-views");
 
 /* UTILS      ----------------------------------------------------------------------------- */
 //  錯誤處理
-const errorsHandle = require("./middleware/errorsHandle");
-const { webpackDev, webpackHMR } = require("./middleware/webpackDevAndHMR");
+// const errorsHandle = require("./middleware/errorsHandle");
+// const { webpackDev, webpackHMR } = require("./middleware/webpackDevAndHMR");
 //  middleware:與redis-session連線
-const { session_middleware } = require("./db/redis");
+// const { session_middleware } = require("./db/redis");
 //  middleware:sequelize transaction
-const sequelizeTransaction = require("./middleware/api/seq_transaction");
+// const sequelizeTransaction = require("./middleware/api/seq_transaction");
 //  middleware:ws
-const { ws_middleware } = require("./middleware/ws");
-const router = require("./routes");
+// const { ws_middleware } = require("./middleware/ws");
+// const router = require("./routes");
 
 /* RUNTIME    ----------------------------------------------------------------------------- */
 const app = new Koa();
 //  加密 session
-app.keys = [SESSION_KEY];
-
-app.use(errorsHandle.middleware);
+// app.keys = [SESSION_KEY];
+app.use(async (ctx, next) => {
+  console.log(ctx.path);
+  await next();
+});
+// app.use(errorsHandle.middleware);
 if (!ENV.isProd) {
   //  打印每一次的request與response
   app.use(require("koa-logger")());
@@ -36,20 +39,31 @@ if (!ENV.isProd) {
   app.use(require("koa-json")());
 }
 
-app.use(webpackDev);
-app.use(webpackHMR);
+if (!ENV.isProd) {
+  const proxy = require("koa-proxies");
+  app.use(
+    proxy(`${WEBPACK.PUBLIC_PATH}`, {
+      target: `http://localhost:${WEBPACK.DEV.port}`, // WDS 預設端口
+      changeOrigin: true,
+      logs: true,
+    })
+  );
+}
+
+// app.use(webpackDev);
+// app.use(webpackHMR);
 app.use(bodyparser);
-app.use(ws_middleware);
-app.use(session_middleware);
-app.use(sequelizeTransaction);
+// app.use(ws_middleware);
+// app.use(session_middleware);
+// app.use(sequelizeTransaction);
 app.use(
   koaViews(WEBPACK.BUILD.VIEW, {
     extension: "ejs",
   })
 );
-app.use(router.routes(), router.allowedMethods());
+// app.use(router.routes(), router.allowedMethods());
 
 //  error log
-app.on("error", errorsHandle.log);
+// app.on("error", errorsHandle.log);
 
 module.exports = app;

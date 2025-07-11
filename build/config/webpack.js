@@ -17,13 +17,20 @@ module.exports = {
   BUILD: {
     DIST: isProd
       ? resolve(__dirname, "../../server/assets")
-      : resolve(__dirname, "../../server/dev_assets"),
+      : resolve(__dirname, "../../dist"),
     VIEW: isProd
       ? resolve(__dirname, "../../server/views")
-      : resolve(__dirname, "../../server/dev_views"),
+      : resolve(__dirname, "../../dist/views"),
     STYLE: "css",
     SCRIPT: "js",
     FONT: "fonts",
     IMAGE: "imgs",
+  },
+  // 補充
+  DEV: {
+    port: 3003,
+    dist: resolve(__dirname, "../dist"),
+    publicPath: "/public",
+    viewDir: resolve(__dirname, "../dist/view"),
   },
 };

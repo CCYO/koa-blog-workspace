@@ -39,6 +39,7 @@ module.exports = {
       : `${WEBPACK.BUILD.SCRIPT}/[name].js`,
     //  可設定 { keep: regex },regex是相對output.path的路徑
     clean: true,
+    devtoolModuleFilenameTemplate: "file://[absolute-resource-path]", // 設定為絕對路徑
   },
   resolve: {
     modules: [resolve(__dirname, "../node_modules")],

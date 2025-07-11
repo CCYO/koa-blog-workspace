@@ -34,7 +34,10 @@ let server = http.createServer(app.callback());
  * Listen on provided port, on all network interfaces.
  */
 const port = normalizePort(process.env.NODE_PORT);
-server.listen(port);
+
+server.listen(port, () => {
+  console.log(`監聽:${port}`);
+});
 server.on("error", onError);
 server.on("listening", onListening);
 

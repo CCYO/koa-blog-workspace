@@ -19,7 +19,7 @@ module.exports = merge(webpackBaseConfig, {
     },
   },
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
+    // new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),
   ],
   module: {
@@ -35,16 +35,6 @@ module.exports = merge(webpackBaseConfig, {
             maxSize: 8 * 1024,
           },
         },
-        // use: [
-        //   {
-        //     loader: "image-webpack-loader",
-        //     options: {
-        //       pngquant: {
-        //         quality: [0.3, 0.5],
-        //       },
-        //     },
-        //   },
-        // ],
       },
       {
         test: /\.css$/,
@@ -58,4 +48,29 @@ module.exports = merge(webpackBaseConfig, {
   },
   devtool: "eval-source-map",
   mode: "development",
+  devServer: {
+    // 不在需要手動添加 new webpack.HotModuleReplacementPlugin()
+    hot: true,
+    liveReload: false, // 避免與 nodemon 衝突
+    //
+    port: WEBPACK.DEV.port,
+    hot: true,
+    static: {
+      directory: WEBPACK.BUILD.DIST, // 替代舊版 contentBase
+      publicPath: WEBPACK.PUBLIC_PATH,
+    },
+    devMiddleware: {
+      writeToDisk: true, // 讓 Koa 能讀取生成檔案
+    },
+    historyApiFallback: {
+      rewrites: [
+        { from: /\/home/, to: "/home.html" },
+        { from: /\/admin/, to: "/admin.html" },
+      ],
+    },
+    onListening: function (devServer) {
+      if (!devServer) return;
+      console.log(`✅ Webpack DevServer listen PORT:${WEBPACK.DEV.port}`);
+    },
+  },
 });
