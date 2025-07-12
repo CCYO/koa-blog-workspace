@@ -47,13 +47,13 @@ module.exports = (function () {
     if (!WEBPACK.ENV.isProd && !dist) {
       // array_filepath[index_views - 1] = "dist";
 
-      dist = array_filepath.reduce((target_folder, folder, i) => {
-        if (folder !== "dist") {
+      dist = array_filepath.reduce((target_folder, folder, index) => {
+        if (index < index_views) {
           target_folder += `/${folder}`;
+          !fs.existsSync(target_folder) && fs.mkdirSync(target_folder);
         }
         return target_folder;
       }, "");
-      fs.mkdirSync(dist);
     }
     // src -> server
     // array_filepath[index_views - 1] = WEBPACK.ENV.isProd ? "server" : "dist";

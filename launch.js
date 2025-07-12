@@ -7,78 +7,84 @@ const NPM = {
   BACKEND: "[nodemon / koa]",
 };
 
-const build = spawn("npm", ["run", "dev:build"], {
-  stdio: "pipe",
-  shell: true, // 兼容 Windows
-  env: { ...process.env, FORCE_COLOR: "1" }, // 強制啟用顏色
-});
-let lock = true;
-tagAndPreserveColor(NPM.BUILD, chalk.bgGray)("START");
-build.stderr.on("data", (data) => handleStderr(NPM.BUILD, data));
-build.stdout.on("data", (data) => {
-  tagAndPreserveColor(NPM.BUILD, chalk.bgBlue)(data);
-  lock = false;
+let backendLock = false;
 
-  if (!lock && /webpack \d+\.\d+\.\d+ compiled/.test(data)) {
-    lock = true;
-    tagAndPreserveColor(NPM.BUILD, chalk.bgGray)("OK");
-
-    // 啟動前端（改用 spawn 以更好處理 ANSI 碼）
-    const frontend = spawn("npm", ["run", "dev:frontend"], {
-      stdio: "pipe",
-      shell: true, // 兼容 Windows
-      env: { ...process.env, FORCE_COLOR: "1" }, // 強制啟用顏色
-    });
-
-    tagAndPreserveColor(NPM.FRONTEND, chalk.bgGray)("START");
-    // 處理前端日誌（保留 Webpack 原始顏色）
-    frontend.stderr.on("data", (data) => handleStderr(NPM.FRONTEND, data));
-
-    // 前端啟動後啟動後端
-    frontend.stdout.on("data", (data) => {
-      tagAndPreserveColor(NPM.FRONTEND, chalk.bgBlue)(data);
-      if (data.includes("✅")) {
-        lock = false;
-      }
-      if (!lock && /webpack \d+\.\d+\.\d+ compiled/.test(data)) {
-        lock = true;
-        tagAndPreserveColor(NPM.FRONTEND, chalk.bgGray)("OK");
-        tagAndPreserveColor(NPM.BACKEND, chalk.bgGray)("START");
-
-        const backend = spawn("npm", ["run", "dev:backend"], {
-          stdio: "pipe",
-          shell: true,
-        });
-
-        backend.stdout.on("data", (data) => {
-          tagAndPreserveColor(NPM.BACKEND, chalk.bgBlue)(data);
-          if (/NODE\: v\d+\.\d+\.\d+, MODE/.test(data)) {
-            tagAndPreserveColor(NPM.BACKEND, chalk.bgGray)("OK");
-          }
-        });
-
-        backend.stderr.on("data", (data) => handleStderr(NPM.BACKEND, data));
-      }
-    });
+const backend = () => {
+  if (backendLock) {
+    return;
   }
-});
-// 標記來源並保留原始顏色
-function tagAndPreserveColor(source, colorFn) {
+  backendLock = true;
+
+  go({
+    command: ["run", "dev:backend"],
+    prefix: NPM.BACKEND,
+    endPattern: /NODE\: v\d+\.\d+\.\d+, MODE/,
+    stdio: "pipe",
+    shell: true, // 兼容 Windows
+  });
+};
+
+const frontend = () => {
+  go({
+    command: ["run", "dev:frontend"],
+    prefix: NPM.FRONTEND,
+    endPattern: /webpack \d+\.\d+\.\d+ compiled/,
+    callback: backend,
+    stdio: "pipe",
+    shell: true, // 兼容 Windows
+    env: { ...process.env, FORCE_COLOR: "1" }, // 強制啟用顏色
+  });
+};
+
+const build = () => {
+  go({
+    command: ["run", "dev:build"],
+    prefix: NPM.BUILD,
+    endPattern: /webpack \d+\.\d+\.\d+ compiled/,
+    callback: frontend,
+    stdio: "pipe",
+    shell: true, // 兼容 Windows
+    env: { ...process.env, FORCE_COLOR: "1" }, // 強制啟用顏色
+  });
+};
+
+build();
+
+// 處理stdin
+function handleStdin(source, colorFn) {
   return (data) => {
-    const lines = data.toString().split("\n"); // 將日誌按行分割
+    const lines = data.toString().split("\n"); // 將按行分割
     lines.forEach((line) => {
+      // 去除換行符
       if (line.trim()) {
-        console.log(`${colorFn(`${source}`)} ${line}`); // 標記並轉發前端日誌
+        console.log(`${colorFn(`${source}`)} ${line}`); // 添加標記
       }
     });
   };
 }
+
+// 處理 stderr
 function handleStderr(source, data) {
   const output = data.toString();
   const isTrueError = /error|failed|exception/i.test(output); // 關鍵字檢測
   const tagColor = isTrueError ? chalk.bgRed : chalk.bgGray;
-  tagAndPreserveColor(
-    `${source} =${isTrueError ? "error= " : "info= "}`,
+  handleStdin(
+    `${source} ${isTrueError ? "=error=" : "=info="} `,
     tagColor
   )(data);
+}
+
+function go({ command, prefix, endPattern, callback, ...options }) {
+  const process = spawn("npm", command, options);
+
+  handleStdin(prefix, chalk.bgGray)("START");
+  process.stderr.on("data", (data) => handleStderr(prefix, data));
+  process.stdout.on("data", (data) => {
+    handleStdin(prefix, chalk.bgBlue)(data);
+
+    if (endPattern.test(data)) {
+      handleStdin(prefix, chalk.bgGray)("OK");
+      callback && callback();
+    }
+  });
 }

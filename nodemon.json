@@ -8,7 +8,9 @@
     "server/utils/render/dev_template/",
     "src/js/",
     "src/css/",
-    "src/_views/"
+    "src/_views/",
+    "dist/",
+    "src/"
   ],
   "verbose": true,
   "exec": "node --inspect=9229 server/bin/www.js",

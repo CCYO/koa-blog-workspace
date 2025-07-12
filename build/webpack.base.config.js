@@ -38,7 +38,11 @@ module.exports = {
         }
       : `${WEBPACK.BUILD.SCRIPT}/[name].js`,
     //  可設定 { keep: regex },regex是相對output.path的路徑
-    clean: true,
+    // clean.keep 可以是regex，匹配的是「相對output.path的路徑」
+    // output.clean: { keep: /common\.cjs/ }
+    clean: {
+      keep: /((components\/)|(wedgets\/)).+\.ejs/,
+    },
     devtoolModuleFilenameTemplate: "file://[absolute-resource-path]", // 設定為絕對路徑
   },
   resolve: {
@@ -94,7 +98,10 @@ module.exports = {
     new webpack.DefinePlugin({
       "process.env.isProd": JSON.stringify(WEBPACK.ENV.isProd),
     }),
-    new WebpackBar(),
+    new WebpackBar({
+      // fancy: false,
+      profile: true,
+    }),
     //  生成NGINX靜態錯誤頁面
     done_hook,
   ],
