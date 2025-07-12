@@ -40,7 +40,7 @@ export default class {
       if (this.timeSet) {
         this._clearTimeout(this.timeSet);
       } else if (this.loading) {
-        //  例如fn若是EventHandle，則代表可藉由args[0]取得event
+        //  例如:fn若是EventHandle，則代表可藉由args[0]取得event
         this.loading(...args);
       }
 

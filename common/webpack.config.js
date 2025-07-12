@@ -4,6 +4,7 @@ const { resolve } = require("path");
 /* NPM        ----------------------------------------------------------------------------- */
 const webpack = require("webpack");
 const TerserPlugin = require("terser-webpack-plugin");
+const webpackBar = require("webpackbar");
 /* EXPORT     ----------------------------------------------------------------------------- */
 module.exports = (env) => {
   const isProd = !Boolean(env.dev);
@@ -11,6 +12,10 @@ module.exports = (env) => {
     plugins: [
       new webpack.DefinePlugin({
         "process.env.isProd": JSON.stringify(isProd),
+      }),
+      new webpackBar({
+        // fancy: false,
+        profile: true,
       }),
     ],
     optimization: {

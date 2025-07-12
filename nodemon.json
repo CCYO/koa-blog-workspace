@@ -1,18 +1,6 @@
 {
-  "ignore": [
-    "server/assets/",
-    "server/views/",
-    "server/utils/render/template/",
-    "server/dev_assets/",
-    "server/dev_views/",
-    "server/utils/render/dev_template/",
-    "src/js/",
-    "src/css/",
-    "src/_views/",
-    "dist/",
-    "src/"
-  ],
+  "watch": ["server/**/*.*", "!server/assets/**/*.*", "node_modules"],
   "verbose": true,
-  "exec": "node --inspect=9229 server/bin/www.js",
+  "exec": "node --inspect=9229 --trace-deprecation server/bin/www.js",
   "ext": "js,mjs,json,ejs"
 }
