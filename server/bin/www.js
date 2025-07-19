@@ -3,22 +3,29 @@
  * Module dependencies.
  */
 
+const fs = require("fs");
+const { resolve } = require("path");
 /* CONFIG     ----------------------------------------------------------------------------- */
-const { ENV } = require("../config");
+//  設定環境變量
+const dotenv = require("dotenv");
+
+// 載入共用配置
+dotenv.config({ path: resolve(__dirname, `../_config/.env`) });
+
+// 載入當前模式配置
+const dotenv_config = resolve(
+  __dirname,
+  `../_config/.env.${process.env.NODE_ENV}`
+);
+if (fs.existsSync(dotenv_config)) {
+  dotenv.config({
+    path: dotenv_config,
+    override: true,
+  });
+}
 
 /* NODEJS     ----------------------------------------------------------------------------- */
 const http = require("http");
-const { resolve } = require("path");
-
-/* NPM     ----------------------------------------------------------------------------- */
-//  設定環境變量
-require("dotenv").config({
-  path: resolve(
-    __dirname,
-    `../_config`,
-    ENV.isProd ? `./.prod.env` : `./.dev.env`
-  ),
-});
 
 /* CUSTOM     ----------------------------------------------------------------------------- */
 const { log } = require("../utils/log");
@@ -94,5 +101,8 @@ function onError(error) {
 function onListening() {
   let addr = server.address();
   let bind = typeof addr === "string" ? "pipe " + addr : "PORT: " + addr.port;
-  log(`NODE: ${process.version}, MODE: ${ENV.MODE}, ${bind}`);
+  // log(`NODE: ${process.version}, MODE: ${process.env.NODE_ENV}, ${bind}`);
+  console.log(
+    `NODE: ${process.version}, MODE: ${process.env.NODE_ENV}, ${bind}`
+  );
 }

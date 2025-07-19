@@ -39,52 +39,36 @@ module.exports = (function () {
     const isPageIndex = isPage && !isTemplate && !isComponent;
     let index_views = array_filepath.findIndex((item) => item === "views");
 
+    // <page>/template/*.ejs 類型，由 common 負責打包成 render 函數來使用
     if (isTemplate) {
       return;
     }
-    array_filepath[index_views - 1] = WEBPACK.ENV.isProd ? "server" : "dist";
+    array_filepath[index_views - 1] = WEBPACK.BUILD.LAYER;
 
-    if (!WEBPACK.ENV.isProd && !dist) {
-      // array_filepath[index_views - 1] = "dist";
-
-      dist = array_filepath.reduce((target_folder, folder, index) => {
-        if (index < index_views) {
-          target_folder += `/${folder}`;
-          !fs.existsSync(target_folder) && fs.mkdirSync(target_folder);
-        }
-        return target_folder;
-      }, "");
-    }
-    // src -> server
-    // array_filepath[index_views - 1] = WEBPACK.ENV.isProd ? "server" : "dist";
-    // array_filepath[index_views - 1] = "server";
-    // if (!WEBPACK.ENV.isProd) {
-    //   // views -> dev_views
-    //   array_filepath[index_views] = "dev_views";
-    // }
-
-    array_filepath.findIndex((folder) => folder);
     //  創建 server/[dev_]views 內，除了 isPageIndex 以外的 ejs
     for (let [index, folder] of array_filepath.entries()) {
       if (
         // 不用生成 pages 資料夾
         folder === "pages" ||
-        // [page]/index.ejs 由 HtmlWebpackPlugin 生成
+        // 過濾掉 [page]/index.ejs(由 HtmlWebpackPlugin 生成)
         isPageIndex
       ) {
         continue;
       }
       //  ejs檔要存放的folder
       target_folder = !index ? `/${folder}` : `${target_folder}/${folder}`;
-      if (index >= index_views && !fs.existsSync(target_folder)) {
+      // if (index >= index_views && !fs.existsSync(target_folder)) {
+      if (index >= index_views - 1 && !fs.existsSync(target_folder)) {
         //  創建index_views內相符的folder
         fs.mkdirSync(target_folder);
       }
+      // 創建ejs檔
       if (index + 1 === array_filepath.length) {
         let ejs_string = fs.readFileSync(filepath, "utf-8");
         fs.writeFileSync(`${target_folder}/${filename}`, ejs_string);
       }
     }
+    // 非 [page]/index.ejs 到這就處理結束了
     if (!isPageIndex) {
       return;
     }

@@ -10,6 +10,7 @@
         USER: ['currentUser', "relationShip", 'blogs', 'pagination'],
         REGISTER_LOGIN: [],
         SETTING: ['currentUser'],
+        TEST: []
       })[locals.page].concat(['active', 'login', 'page'])
   %>
   <% for(let type in locals){ %>

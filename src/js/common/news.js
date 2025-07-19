@@ -122,8 +122,8 @@ export default class {
       let ins_news = this;
       let ws_api =
         location.protocol === "https:"
-          ? `wss://${location.host}/ws`
-          : `ws://${location.host}/ws`;
+          ? `wss://${location.host}/ccyo_ws`
+          : `ws://${location.host}/ccyo_ws`;
       let ws = (this.ws = new WebSocket(ws_api));
       //開啟後執行的動作，指定一個 function 會在連結 WebSocket 後執行
       ws.onopen = () => {

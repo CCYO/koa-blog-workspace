@@ -4,9 +4,10 @@
 
 /* NODEJS     ----------------------------------------------------------------------------- */
 const { resolve } = require("path");
+const { WEBPACK } = require("../_config");
 
 const isProd = process.env.NODE_ENV === "production";
-
+const LAYER = isProd ? "server" : "dist";
 /* EXPORT     ----------------------------------------------------------------------------- */
 module.exports = {
   ENV: {
@@ -15,22 +16,21 @@ module.exports = {
   PUBLIC_PATH: "/public",
   //  存放的資料夾名稱
   BUILD: {
+    LAYER,
     DIST: isProd
-      ? resolve(__dirname, "../../server/assets")
-      : resolve(__dirname, "../../dist"),
+      ? resolve(__dirname, `../../${LAYER}/assets`)
+      : resolve(__dirname, `../../${LAYER}`),
     VIEW: isProd
-      ? resolve(__dirname, "../../server/views")
-      : resolve(__dirname, "../../dist/views"),
+      ? resolve(__dirname, `../../${LAYER}/views`)
+      : resolve(__dirname, `../../${LAYER}/views`),
     STYLE: "css",
     SCRIPT: "js",
     FONT: "fonts",
     IMAGE: "imgs",
   },
-  // 補充
   DEV: {
-    port: 3003,
-    dist: resolve(__dirname, "../dist"),
-    publicPath: "/public",
-    viewDir: resolve(__dirname, "../dist/view"),
+    PORT: WEBPACK.DEV_PORT,
+    ALLOW_HOSTS: WEBPACK.ALLOW_HOSTS,
+    WEB_SOCKET_URL: WEBPACK.WEB_SOCKET_URL,
   },
 };

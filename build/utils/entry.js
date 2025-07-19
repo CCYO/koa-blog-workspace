@@ -16,17 +16,14 @@ module.exports = ((filepathList) => {
     const arr = filepath.split(/[\/|\/\/|\\|\\\\]/g); // eslint-disable-line
 
     const chunkName = arr[arr.length - 1].replace(/\.js/g, "");
-    res[chunkName] =
-      process.env.NODE_ENV !== "production"
-        ? [filepath, "webpack-hot-middleware/client?reload=true"]
-        : filepath;
+    res[chunkName] = filepath;
   });
   // 安排靜態資源
-  let filepath = resolve(__dirname, "../../src/assets/js/report.js");
-  res["report"] =
-    process.env.NODE_ENV !== "production"
-      ? [filepath, "webpack-hot-middleware/client?reload=true"]
-      : filepath;
+  let filepath = resolve(
+    __dirname,
+    "../../src/assets/js/assetLoadErrorReporter.js"
+  );
+  res["assetLoadErrorReporter"] = filepath;
 
   return res;
 })(filepathList);

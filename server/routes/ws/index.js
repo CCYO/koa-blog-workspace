@@ -8,7 +8,7 @@ const router = require("koa-router")();
 /* MIDDLEWARE ----------------------------------------------------------------------------- */
 const WS = require("../../middleware/ws");
 
-router.prefix("/ws");
+router.prefix("/ccyo_ws");
 
 /**
  * @description 開啟ws連線

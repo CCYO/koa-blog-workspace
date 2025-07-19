@@ -1,6 +1,6 @@
 {
   "watch": ["server/**/*.*", "!server/assets/**/*.*", "node_modules"],
   "verbose": true,
-  "exec": "node --inspect=9229 --trace-deprecation server/bin/www.js",
+  "exec": "node --trace-deprecation server/bin/www.js",
   "ext": "js,mjs,json,ejs"
 }

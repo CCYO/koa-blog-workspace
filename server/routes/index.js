@@ -30,6 +30,12 @@ router.get("/", (ctx) => {
  * @description test error
  */
 if (!ENV.isProd) {
+  router.head("/wait-on", async (ctx, next) => {
+    ctx.body = "OK";
+  });
+  router.get("/env", async (ctx, next) => {
+    ctx.body = ENV;
+  });
   router.get("/api/error", () => {
     throw new MyErr(ERR_RES.SERVER.RESPONSE.TEST);
   });

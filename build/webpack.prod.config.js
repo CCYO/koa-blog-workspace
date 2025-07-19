@@ -6,9 +6,6 @@
 const { WEBPACK } = require("./config");
 const webpackBaseConfig = require("./webpack.base.config");
 
-/* NODEJS     ----------------------------------------------------------------------------- */
-const { resolve } = require("path");
-
 /* NPM        ----------------------------------------------------------------------------- */
 const { merge } = require("webpack-merge");
 const OptimizeCss = require("css-minimizer-webpack-plugin");
@@ -23,7 +20,6 @@ const BundleAnalyzerPlugin =
  */
 const TerserPlugin = require("terser-webpack-plugin");
 const CompressionWebpackPlugin = require("compression-webpack-plugin");
-const filemanagerWebpackPlugin = require("filemanager-webpack-plugin");
 
 const styleLoaderList = [
   {
@@ -129,30 +125,6 @@ const plugins = (analyzer) =>
       deleteOriginalAssets: false, // 不刪除原檔
       minRatio: 0.8, //  壓縮率優於此值，才作壓縮
     }),
-    new filemanagerWebpackPlugin({
-      events: {
-        // onStart: {
-        //   delete: [resolve(__dirname, "../server/views/")],
-        // },
-        onEnd: {
-          mkdir: [resolve(__dirname, "../server/assets/map/")],
-          copy: [
-            {
-              source: resolve(__dirname, "../server/assets/js/*.map"),
-              destination: resolve(__dirname, "../server/assets/map"),
-            },
-            {
-              source: resolve(__dirname, "../server/assets/css/*.map"),
-              destination: resolve(__dirname, "../server/assets/map"),
-            },
-          ],
-          delete: [
-            resolve(__dirname, "../server/assets/css/*.map"),
-            resolve(__dirname, "../server/assets/js/*.map"),
-          ],
-        },
-      },
-    }),
   ].filter(Boolean);
 
 const prod_config = (analyzer) => ({
@@ -188,6 +160,7 @@ const prod_config = (analyzer) => ({
 
 module.exports = (env) => {
   let analyzer = Boolean(env.analyzer === "true");
+  console.log("analyzer", analyzer);
   /**
    * SpeedMeasurePlugin 會導致
    * 1)因為MiniCssExtractPlugin報錯，無法打包
@@ -209,6 +182,7 @@ module.exports = (env) => {
    */
   let config = merge(webpackBaseConfig, prod_config(analyzer));
   config.module.rules = [{ oneOf: [...config.module.rules] }];
+
   return config;
 };
 

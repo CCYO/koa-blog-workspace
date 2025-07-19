@@ -1,33 +1,34 @@
 /* NODEJS     ----------------------------------------------------------------------------- */
 const { resolve } = require("path");
 
+const isProd = process.env.NODE_ENV === "production";
+console.log("common NODE_ENV", process.env.NODE_ENV);
 /* NPM        ----------------------------------------------------------------------------- */
 const webpack = require("webpack");
-const TerserPlugin = require("terser-webpack-plugin");
-const webpackBar = require("webpackbar");
+// const TerserPlugin = require("terser-webpack-plugin");
+// const webpackBar = require("webpackbar");
 /* EXPORT     ----------------------------------------------------------------------------- */
 module.exports = (env) => {
-  const isProd = !Boolean(env.dev);
+  // const isProd = !Boolean(env.dev);
   const common_conf = {
     plugins: [
       new webpack.DefinePlugin({
         "process.env.isProd": JSON.stringify(isProd),
       }),
-      new webpackBar({
-        // fancy: false,
-        profile: true,
-      }),
+      // new webpackBar({
+      //   profile: true,
+      // }),
     ],
-    optimization: {
-      // 默認設定
-      minimize: true,
-      minimizer: [
-        new TerserPlugin({
-          // 默認為true，會因為要將註釋單獨提取，而生成LICENSE檔案，故設定為false
-          extractComments: false,
-        }),
-      ],
-    },
+    // optimization: {
+    //   // 默認設定
+    //   minimize: true,
+    //   minimizer: [
+    //     new TerserPlugin({
+    //       // 默認為true，會因為要將註釋單獨提取，而生成LICENSE檔案，故設定為false
+    //       extractComments: false,
+    //     }),
+    //   ],
+    // },
     // koa-blog/common 負責打包前後端都會用到的「通用模塊」，實際上在前/後端會如何使用
     // 後端：由NodeJS直接運行使用（不需再討論）
     // 前端：再一次被koa-blog/build進行打包，生成最終的前端代碼
@@ -56,15 +57,15 @@ module.exports = (env) => {
       ...common_conf,
     },
     // ESM 配置
-    {
-      entry: resolve(__dirname, "./src/index.js"),
-      output: {
-        path: resolve(__dirname, "dist"),
-        library: { type: "module" },
-        filename: "common.esm.js",
-      },
-      experiments: { outputModule: true },
-      ...common_conf,
-    },
+    // {
+    //   entry: resolve(__dirname, "./src/index.js"),
+    //   output: {
+    //     path: resolve(__dirname, "dist"),
+    //     library: { type: "module" },
+    //     filename: "common.esm.js",
+    //   },
+    //   experiments: { outputModule: true },
+    //   ...common_conf,
+    // },
   ];
 };
