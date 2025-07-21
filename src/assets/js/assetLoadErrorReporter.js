@@ -1,3 +1,4 @@
+console.log(123456);
 //   處理外部資源讀取失敗
 window.addEventListener("error", report, true);
 

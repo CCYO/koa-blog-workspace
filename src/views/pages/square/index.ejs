@@ -3,7 +3,7 @@
 
 <head>
   <!-- 傳入 title -->
-  <%- include('../wedgets/header/index') %>
+  <%- include('../wedgets/header/index', { reporterScriptPath: '__reporterScriptPath__', title}) %>
 </head>
 
 <body>
@@ -21,6 +21,9 @@
       </div>
     </div>
   </main>
+  <h1>
+    __reporterScriptPath__
+  </h1>
   <%- include('../wedgets/footer/index') %>
 </body>
 

@@ -25,13 +25,8 @@ module.exports = {
     path: WEBPACK.BUILD.DIST,
     publicPath: `${WEBPACK.PUBLIC_PATH}/`,
     filename: WEBPACK.ENV.isProd
-      ? (pathData) => {
-          return pathData.chunk.name === "report"
-            ? `${WEBPACK.BUILD.SCRIPT}/[name].js`
-            : `${WEBPACK.BUILD.SCRIPT}/[name].[contenthash:5].js`;
-        }
-      : `${WEBPACK.BUILD.SCRIPT}/[name].js`,
-
+      ? `${WEBPACK.BUILD.SCRIPT}/[name].js`
+      : `${WEBPACK.BUILD.SCRIPT}/[name].[contenthash:5].js`,
     sourceMapFilename: "map/[name].[contenthash:5].js.map",
     clean: {
       keep: /((components\/)|(wedgets\/)).+\.ejs/,
@@ -64,10 +59,17 @@ module.exports = {
             : `${WEBPACK.BUILD.FONT}/[name][ext]`,
         },
       },
-      {
-        test: /\.ejs$/,
-        use: ["raw-loader"],
-      },
+      // {
+      //   test: /\.ejs$/,
+      //   use: ["raw-loader"],
+      // },
+      //   loader: "lodash-template-loader",
+      //   options: {
+      //     evaluate: /<\$([\s\S]+?)\$>/g, // 自定義 evaluate 標籤為 {{}}
+      //     interpolate: /<\$=([\s\S]+?)\$>/g, // 自定義 interpolate 標籤為 {{=}}
+      //     escape: /<\$-([\s\S]+?)\$>/g, // 自定義 escape 標籤為 {{-}}
+      //   },
+      // },
     ],
   },
   plugins: [
