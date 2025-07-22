@@ -25,8 +25,8 @@ module.exports = {
     path: WEBPACK.BUILD.DIST,
     publicPath: `${WEBPACK.PUBLIC_PATH}/`,
     filename: WEBPACK.ENV.isProd
-      ? `${WEBPACK.BUILD.SCRIPT}/[name].js`
-      : `${WEBPACK.BUILD.SCRIPT}/[name].[contenthash:5].js`,
+      ? `${WEBPACK.BUILD.SCRIPT}/[name].[contenthash:5].js`
+      : `${WEBPACK.BUILD.SCRIPT}/[name].js`,
     sourceMapFilename: "map/[name].[contenthash:5].js.map",
     clean: {
       keep: /((components\/)|(wedgets\/)).+\.ejs/,

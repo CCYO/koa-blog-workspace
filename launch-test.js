@@ -4,7 +4,7 @@ const { chalkStderr: chalk } = require("chalk"); // 用於顏色化輸出
 const NPM = {
   BUILD: "[webpack / build:common]",
   FRONTEND: "[webpack / build:frontend]",
-  BACKEND: "[nodemon / koa]",
+  BACKEND: "[nodemon / NodeJS]",
 };
 // 來自 launch.json
 const PORT = {
@@ -34,7 +34,7 @@ const backend = () => {
 
 const frontend = () => {
   go({
-    command: ["run", "test:build"],
+    command: ["run", "test:build:frontend"],
     prefix: NPM.FRONTEND,
     endPattern: /webpack \d+\.\d+\.\d+ compiled/,
     callback: backend,
@@ -47,7 +47,7 @@ const frontend = () => {
 
 const build = () => {
   go({
-    command: ["run", "common:build"],
+    command: ["run", "test:build:common"],
     prefix: NPM.BUILD,
     endPattern: /webpack \d+\.\d+\.\d+ compiled/,
     callback: frontend,

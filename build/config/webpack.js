@@ -13,7 +13,7 @@ module.exports = {
   ENV: {
     isProd,
   },
-  PUBLIC_PATH: "/public",
+  PUBLIC_PATH: isProd ? "/public" : "/dev_public",
   //  存放的資料夾名稱
   BUILD: {
     LAYER,

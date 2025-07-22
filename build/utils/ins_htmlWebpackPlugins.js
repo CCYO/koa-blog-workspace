@@ -101,21 +101,22 @@ function _templateContent(filepath) {
 
     // 1. 找到目標 script 的路徑
     let reporterScriptPath = null;
-    compilation.entrypoints;
-    let names = Object.getOwnPropertyNames(compilation.assets);
+    // compilation.entrypoints;
+    // let names = Object.getOwnPropertyNames(compilation.assets);
 
-    reporterScriptPath = names.find((_name) =>
-      _name.includes(`js/assetLoadErrorReporter`)
-    );
-    // for (const jsFile of compilation.entrypoints
-    //   .get("assetLoadErrorReporter")
-    //   .getFiles()) {
-    //   let x = compilation.entrypoints.get("assetLoadErrorReporter").chunks.id === 'assetLoadErrorReporter';
-    //   let xx = x.files.include('assetLoadErrorReporter')
-    //   // 這種方式比遍歷 assets.js 更精準
-    //   reporterScriptPath = jsFile;
-    //   break;
-    // }
+    // reporterScriptPath = names.find((_name) =>
+    //   _name.includes(`js/assetLoadErrorReporter`)
+    // );
+
+    const files = compilation.entrypoints
+      .get("assetLoadErrorReporter")
+      .getFiles();
+    for (const jsFile of files) {
+      if (jsFile.includes("assetLoadErrorReporter")) {
+        reporterScriptPath = jsFile;
+        break;
+      }
+    }
 
     if (!reporterScriptPath) {
       // 如果找不到檔案，可以拋出錯誤或給予警告

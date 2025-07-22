@@ -29,7 +29,7 @@ router.get("/", (ctx) => {
 /**
  * @description test error
  */
-if (!ENV.isProd) {
+if (ENV.isTest) {
   router.head("/wait-on", async (ctx, next) => {
     ctx.body = "OK";
   });
