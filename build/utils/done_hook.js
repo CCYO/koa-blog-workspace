@@ -31,7 +31,7 @@ async function create_nginx_error_pages() {
     "utf-8"
   );
   // 要建檔的folder
-  let folder = resolve(WEBPACK.BUILD.DIST, "./html");
+  let folder = `${WEBPACK.BUILD.DIST}/${WEBPACK.BUILD.HTML}`;
   if (!fs.existsSync(folder)) {
     fs.mkdirSync(folder);
   }

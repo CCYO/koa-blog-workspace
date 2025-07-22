@@ -9,7 +9,6 @@ const { WEBPACK } = require("./config");
 /* NPM        ----------------------------------------------------------------------------- */
 const webpack = require("webpack");
 const { merge } = require("webpack-merge");
-const HtmlInlineScriptPlugin = require("html-inline-script-webpack-plugin");
 
 /* EXPORT     ----------------------------------------------------------------------------- */
 module.exports = merge(webpackBaseConfig, {
@@ -19,42 +18,32 @@ module.exports = merge(webpackBaseConfig, {
       config: [__filename],
     },
   },
-  plugins: [
-    new webpack.NoEmitOnErrorsPlugin(),
-    new HtmlInlineScriptPlugin({
-      htmlMatchPattern: [/[.]ejs$/],
-      scriptMatchPattern: [/runtime\.js$/, /runtime[.]\w+[.]js$/],
-      // 保留匹配的資源，不刪除原始文件
-      assetPreservePattern: [/runtime[.]\w+[.]js$/],
-    }),
-  ],
-  optimization: {
-    //  紀錄所有chunk彼此的引用關係
-    runtimeChunk: {
-      name: "runtime",
-    },
-  },
+  plugins: [new webpack.NoEmitOnErrorsPlugin()],
   module: {
     rules: [
       {
-        test: /\.(png|jpg|jpeg|gif)$/,
-        type: "asset",
-        generator: {
-          filename: `${WEBPACK.BUILD.IMAGE}/[name].[contenthash:5][ext]`,
-        },
-        parser: {
-          dataUrlCondition: {
-            maxSize: 8 * 1024,
+        oneOf: [
+          {
+            test: /\.(png|jpg|jpeg|gif)$/,
+            type: "asset",
+            generator: {
+              filename: `${WEBPACK.BUILD.IMAGE}/[name].[contenthash:5][ext]`,
+            },
+            parser: {
+              dataUrlCondition: {
+                maxSize: 8 * 1024,
+              },
+            },
           },
-        },
-      },
-      {
-        test: /\.css$/,
-        use: ["style-loader", "css-loader"],
-      },
-      {
-        test: /\.s[ac]ss$/,
-        use: ["style-loader", "css-loader", "sass-loader"],
+          {
+            test: /\.css$/,
+            use: ["style-loader", "css-loader"],
+          },
+          {
+            test: /\.s[ac]ss$/,
+            use: ["style-loader", "css-loader", "sass-loader"],
+          },
+        ],
       },
     ],
   },

@@ -2,7 +2,7 @@
 <html lang="zh-tw">
 
 <head>
-  <%- include('../wedgets/header/index', { reporterScriptPath: '__reporterScriptPath__', title}) %>
+  <%- include('../wedgets/header/index', { reporterScriptPath: '__reporterScriptPath__', title: locals.title ? title : errModel.msg}) %>
 </head>
 
 <body>

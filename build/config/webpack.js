@@ -13,6 +13,7 @@ module.exports = {
   ENV: {
     isProd,
   },
+  FAVICON: resolve(__dirname, "../../src/assets/imgs/favicon.png"),
   PUBLIC_PATH: isProd ? "/public" : "/dev_public",
   //  存放的資料夾名稱
   BUILD: {
@@ -27,6 +28,7 @@ module.exports = {
     SCRIPT: "js",
     FONT: "fonts",
     IMAGE: "imgs",
+    HTML: "html",
   },
   DEV: {
     PORT: WEBPACK.DEV_PORT,

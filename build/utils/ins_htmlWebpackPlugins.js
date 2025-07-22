@@ -78,9 +78,7 @@ module.exports = (function () {
     let opts = {
       filename: `${WEBPACK.BUILD.VIEW}/${pageName}/${filename}`,
       //   以entry[chunkName]匹配那些打包後js要被插入
-      // chunks: [pageName, "assetLoadErrorReporter", "runtime"],
       chunks: [pageName, "runtime"],
-      // chunks: [pageName],
       //   指定打包完成的js，插入body尾部
       inject: "body",
       template: filepath,
@@ -101,12 +99,6 @@ function _templateContent(filepath) {
 
     // 1. 找到目標 script 的路徑
     let reporterScriptPath = null;
-    // compilation.entrypoints;
-    // let names = Object.getOwnPropertyNames(compilation.assets);
-
-    // reporterScriptPath = names.find((_name) =>
-    //   _name.includes(`js/assetLoadErrorReporter`)
-    // );
 
     const files = compilation.entrypoints
       .get("assetLoadErrorReporter")
@@ -117,9 +109,8 @@ function _templateContent(filepath) {
         break;
       }
     }
-
+    // 如果找不到檔案，可以拋出錯誤或給予警告
     if (!reporterScriptPath) {
-      // 如果找不到檔案，可以拋出錯誤或給予警告
       throw new Error(
         "Could not find compiled asset for 'assetLoadErrorReporter'"
       );
@@ -130,8 +121,6 @@ function _templateContent(filepath) {
     const templateString = fs.readFileSync(templatePath, "utf8");
 
     // 3. 替換佔位符並返回最終的樣板內容
-    //    注意：這裡我們只替換我們關心的佔位符
-    //    其他的 EJS 標籤會被保留下來
     return templateString.replace(
       /__reporterScriptPath__/g,
       `${WEBPACK.PUBLIC_PATH}/${reporterScriptPath}`

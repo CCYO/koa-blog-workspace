@@ -34,7 +34,11 @@ if (ENV.isTest) {
     ctx.body = "OK";
   });
   router.get("/env", async (ctx, next) => {
-    ctx.body = ENV;
+    if (ENV.isDev) {
+      ctx.body = ENV;
+    } else {
+      await ctx.redirect("/public/html/bundle-report.html");
+    }
   });
   router.get("/api/error", () => {
     throw new MyErr(ERR_RES.SERVER.RESPONSE.TEST);
