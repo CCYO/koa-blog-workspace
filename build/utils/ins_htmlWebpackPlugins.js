@@ -83,47 +83,37 @@ module.exports = (function () {
       inject: "body",
       template: filepath,
       // 使用 templateContent 函數動態處理
-      templateContent: _templateContent(filepath),
+      templateContent: _templateContent(filepath, "assetLoadErrorReporter"),
     };
     result.push(new HtmlWebpackPlugin(opts));
   });
   return result;
 })();
 
-function _templateContent(filepath) {
+function _templateContent(templatePath, inject_file) {
   return function (params) {
+    let inject_top_script = null;
     // params 包含 compilation, assets, assetTags, options
     // 為了可讀性，我們直接從外層作用域獲取 compilation 亦可，
-    // 但 html-webpack-plugin v5 已將 compilation 傳入，直接使用更佳。
     const compilation = params.compilation;
 
     // 1. 找到目標 script 的路徑
-    let reporterScriptPath = null;
-
-    const files = compilation.entrypoints
-      .get("assetLoadErrorReporter")
-      .getFiles();
+    const files = compilation.entrypoints.get(inject_file).getFiles();
     for (const jsFile of files) {
-      if (jsFile.includes("assetLoadErrorReporter")) {
-        reporterScriptPath = jsFile;
+      if (jsFile.includes(inject_file)) {
+        inject_top_script = jsFile;
         break;
       }
     }
     // 如果找不到檔案，可以拋出錯誤或給予警告
-    if (!reporterScriptPath) {
-      throw new Error(
-        "Could not find compiled asset for 'assetLoadErrorReporter'"
-      );
+    if (!inject_top_script) {
+      throw new Error("Could not find compiled asset for inject_top_script");
     }
 
     // 2. 讀取 EJS 樣板檔案的原始內容
-    const templatePath = filepath;
     const templateString = fs.readFileSync(templatePath, "utf8");
-
+    const replaceString = `${WEBPACK.PUBLIC_PATH}/${inject_top_script}`;
     // 3. 替換佔位符並返回最終的樣板內容
-    return templateString.replace(
-      /__reporterScriptPath__/g,
-      `${WEBPACK.PUBLIC_PATH}/${reporterScriptPath}`
-    );
+    return templateString.replace(/__INJECT_TOP_SCRIPT__/g, replaceString);
   };
 }
