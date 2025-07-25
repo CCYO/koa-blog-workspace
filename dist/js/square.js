@@ -57454,8 +57454,9 @@ function getDefaultWhiteList() {
     header: [],
     hr: [],
     i: [],
-    img: ["src", "alt", "title", "width", "height"],
+    img: ["src", "alt", "title", "width", "height", "loading"],
     ins: ["datetime"],
+    kbd: [],
     li: [],
     mark: [],
     nav: [],
@@ -57852,6 +57853,7 @@ exports.onIgnoreTagStripAll = onIgnoreTagStripAll;
 exports.StripTagBody = StripTagBody;
 exports.stripCommentTag = stripCommentTag;
 exports.stripBlankChar = stripBlankChar;
+exports.attributeWrapSign = '"';
 exports.cssFilter = defaultCSSFilter;
 exports.getDefaultCSSWhiteList = getDefaultCSSWhiteList;
 
@@ -58338,6 +58340,8 @@ function FilterXSS(options) {
     options.whiteList = DEFAULT.whiteList;
   }
 
+  this.attributeWrapSign = options.singleQuotedAttributeValue === true ? "'" : DEFAULT.attributeWrapSign;
+
   options.onTag = options.onTag || DEFAULT.onTag;
   options.onTagAttr = options.onTagAttr || DEFAULT.onTagAttr;
   options.onIgnoreTag = options.onIgnoreTag || DEFAULT.onIgnoreTag;
@@ -58375,6 +58379,7 @@ FilterXSS.prototype.process = function (html) {
   var onIgnoreTagAttr = options.onIgnoreTagAttr;
   var safeAttrValue = options.safeAttrValue;
   var escapeHtml = options.escapeHtml;
+  var attributeWrapSign = me.attributeWrapSign;
   var cssFilter = me.cssFilter;
 
   // remove invisible characters
@@ -58428,7 +58433,7 @@ FilterXSS.prototype.process = function (html) {
             // call `safeAttrValue()`
             value = safeAttrValue(tag, name, value, cssFilter);
             if (value) {
-              return name + '="' + value + '"';
+              return name + '=' + attributeWrapSign + value + attributeWrapSign;
             } else {
               return name;
             }
@@ -62327,4 +62332,4 @@ module.exports = "data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%
 /******/ var __webpack_exports__ = (__webpack_exec__("../node_modules/webpack-dev-server/client/index.js?protocol=wss%3A&username=&password=&hostname=dev-koa-blog.ccyo.work&port=&pathname=%2Fws&logging=info&overlay=true&reconnect=10&hot=true&live-reload=false"), __webpack_exec__("../node_modules/webpack/hot/dev-server.js"), __webpack_exec__("../src/js/page/square.js"));
 /******/ }
 ]);
-//# sourceMappingURL=../map/square.3199d.js.map
+//# sourceMappingURL=../map/square.c1bd9.js.map

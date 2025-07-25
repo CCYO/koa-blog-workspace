@@ -47,7 +47,7 @@ const frontend = () => {
 
 const build = () => {
   go({
-    command: ["run", "test:build:common"],
+    command: ["run", "test:common"],
     prefix: NPM.BUILD,
     endPattern: /webpack \d+\.\d+\.\d+ compiled/,
     callback: frontend,
