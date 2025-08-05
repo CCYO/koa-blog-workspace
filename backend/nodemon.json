@@ -1,0 +1,6 @@
+{
+  "ignore": ["assets", "views", "node_modules"],
+  "verbose": true,
+  "exec": "node --trace-deprecation bin/www.js",
+  "ext": "js,mjs,json,ejs"
+}

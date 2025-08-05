@@ -1,9 +1,11 @@
 node_modules/
-common/dist/
-server/_config
-server/assets
-server/dev_assets
-server/views
-server/dev_views
-src/assets/js/common.js
+
 .vscode/
+_config/
+log/
+
+# 忽略 bundle
+dist/
+share/cjs/
+backend/assets/
+backend/views/

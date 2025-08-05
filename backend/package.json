@@ -1,0 +1,49 @@
+{
+  "name": "@koa-blog/backend",
+  "version": "1.0.0",
+  "main": "app.js",
+  "bin": {
+    "server": "bin/www.js"
+  },
+  "scripts": {
+    "dev": "cross-env NODE_ENV=development nodemon",
+    "test": "cross-env NODE_ENV=test nodemon",
+    "pm2:start": "pm2 start ./_config/ecosystem.config.js",
+    "pm2:restart": "pm2 restart $npm_package_name",
+    "pm2:stop": "pm2 stop $npm_package_name",
+    "pm2:delete": "pm2 delete $npm_package_name",
+    "pm2:log": "pm2 logs $npm_package_name",
+    "pm2:flush": "pm2 flush $npm_package_name"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@google-cloud/storage": "^7.16.0",
+    "@koa/router": "^13.1.1",
+    "@ladjs/koa-views": "^9.0.0",
+    "cls-hooked": "^4.2.2",
+    "dayjs": "^1.11.13",
+    "dotenv": "^17.2.1",
+    "ejs": "^3.1.10",
+    "firebase-admin": "^13.4.0",
+    "formidable": "^3.5.4",
+    "koa": "^3.0.0",
+    "koa-bodyparser": "^4.4.1",
+    "koa-easy-ws": "^2.1.0",
+    "koa-generic-session": "^2.3.1",
+    "koa-json": "^2.0.2",
+    "koa-redis": "^4.0.1",
+    "mysql2": "^3.14.2",
+    "nodemailer": "^7.0.5",
+    "redis": "^5.6.1",
+    "sequelize": "^6.37.7",
+    "source-map": "^0.6.1",
+    "xss": "^1.0.15"
+  },
+  "devDependencies": {
+    "cross-env": "^10.0.0",
+    "koa-logger": "^4.0.0",
+    "nodemon": "^3.1.10"
+  }
+}

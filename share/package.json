@@ -1,0 +1,28 @@
+{
+  "name": "@koa_blog/share",
+  "version": "1.0.0",
+  "main": "webpack.config.js",
+  "scripts": {
+    "dev": "cross-env NODE_ENV=development webpack --config ./webpack.config",
+    "prod": "cross-env NODE_ENV=production webpack --config ./webpack.config"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "ajv": "^8.17.1",
+    "ajv-errors": "^3.0.0",
+    "ajv-formats": "^2.1.1",
+    "ajv-keywords": "^5.1.0",
+    "dayjs": "^1.11.13",
+    "lodash": "^4.17.21",
+    "xss": "^1.0.15"
+  },
+  "devDependencies": {
+    "cross-env": "^10.0.0",
+    "raw-loader": "^4.0.2",
+    "webpack": "^5.100.2",
+    "webpack-cli": "^6.0.1",
+    "webpackbar": "^7.0.0"
+  }
+}
