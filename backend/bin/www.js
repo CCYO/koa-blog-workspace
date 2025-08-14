@@ -8,27 +8,31 @@ const { resolve } = require("path");
 /* CONFIG     ----------------------------------------------------------------------------- */
 //  設定環境變量
 const dotenv = require("dotenv");
-
+console.log("process.env.NODE_ENV ==> ", process.env.NODE_ENV);
 // 載入共用配置
 dotenv.config({ path: resolve(__dirname, `../_config/.env`) });
-
 // 載入當前模式配置
 const dotenv_config = resolve(
   __dirname,
   `../_config/.env.${process.env.NODE_ENV}`
 );
+console.log(
+  "fs.existsSync(dotenv_config)",
+  dotenv_config,
+  fs.existsSync(dotenv_config)
+);
+console.log(2, process.env.NODE_ENV, process.env.NODE_PORT);
 if (fs.existsSync(dotenv_config)) {
   dotenv.config({
     path: dotenv_config,
     override: true,
   });
 }
-
+console.log(3, process.env.NODE_ENV, process.env.NODE_PORT);
 /* NODEJS     ----------------------------------------------------------------------------- */
 const http = require("http");
 
 /* CUSTOM     ----------------------------------------------------------------------------- */
-const { log } = require("../utils/log");
 const app = require("../app");
 
 /**
@@ -42,7 +46,7 @@ let server = http.createServer(app.callback());
  */
 const port = normalizePort(process.env.NODE_PORT);
 
-server.listen(port, () => {
+server.listen(port, "localhost", () => {
   console.log(`監聽:${port}`);
 });
 server.on("error", onError);
@@ -100,8 +104,10 @@ function onError(error) {
 
 function onListening() {
   let addr = server.address();
-  let bind = typeof addr === "string" ? "pipe " + addr : "PORT: " + addr.port;
-  // log(`NODE: ${process.version}, MODE: ${process.env.NODE_ENV}, ${bind}`);
+  let bind =
+    typeof addr === "string"
+      ? "pipe " + addr
+      : "ADDRESS:PORT: " + `${addr.address}:${addr.port}`;
   console.log(
     `NODE: ${process.version}, MODE: ${process.env.NODE_ENV}, ${bind}`
   );

@@ -94,9 +94,9 @@ module.exports = {
     }),
     new HtmlInlineScriptPlugin({
       htmlMatchPattern: [/[.]ejs$/],
-      scriptMatchPattern: [/runtime\.js$/, /runtime[.]\w+[.]js$/],
+      scriptMatchPattern: [/_script_inline_runtime/],
       // 保留匹配的資源，不刪除原始文件
-      assetPreservePattern: [/runtime[.]\w+[.]js$/],
+      // assetPreservePattern: [/_script_inline_runtime/],
     }),
     //  生成NGINX靜態錯誤頁面
     done_hook,
@@ -104,7 +104,7 @@ module.exports = {
   optimization: {
     //  紀錄所有chunk彼此的引用關係
     runtimeChunk: {
-      name: "runtime",
+      name: "_script_inline_runtime",
     },
   },
 };

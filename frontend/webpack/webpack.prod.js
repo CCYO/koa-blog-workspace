@@ -13,6 +13,8 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 const TerserPlugin = require("terser-webpack-plugin");
 const CompressionWebpackPlugin = require("compression-webpack-plugin");
+const BundleAnalyzerPlugin =
+  require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 
 const prod_config = {
   module: {
@@ -44,6 +46,7 @@ const prod_config = {
     ],
   },
   plugins: [
+    new BundleAnalyzerPlugin(),
     new MiniCssExtractPlugin({
       filename: `${WEBPACK.BUILD.STYLE}/[name].[contenthash:5].min.css`,
     }),

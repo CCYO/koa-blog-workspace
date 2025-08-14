@@ -65,15 +65,14 @@ module.exports = merge(webpackBaseConfig, {
       },
     ],
   },
-  devtool: "source-map",
+  devtool: "eval-source-map",
   mode: "development",
   devServer: {
-    // 不在需要手動添加 new webpack.HotModuleReplacementPlugin()
+    port: WEBPACK.DEV.PORT,
+    // webpack 2+ 不在需要手動添加 new webpack.HotModuleReplacementPlugin()
     hot: true,
     // 頁面重整，通常 hot:true 就不需要
-    liveReload: false, // 避免與 nodemon 衝突
-    port: WEBPACK.DEV.PORT,
-    hot: true,
+    liveReload: false,
     static: {
       directory: WEBPACK.BUILD.DIST, // 替代舊版 contentBase
       publicPath: `${WEBPACK.PUBLIC_PATH}/`,
@@ -93,6 +92,8 @@ module.exports = merge(webpackBaseConfig, {
       // webSocketURL: `ws://localhost:${WEBPACK.DEV.port}/__webpack_hmr`,
       // 新增：明確指定 HMR 傳輸方式為 WebSocket，禁用其他潛在的備用方案，例如 Server-Sent Events (SSE)。
       webSocketTransport: "ws",
+      // 不在畫面顯示警告與錯誤提示
+      overlay: false,
     },
     // webSocketServer: "ws",
     onListening: function (devServer) {

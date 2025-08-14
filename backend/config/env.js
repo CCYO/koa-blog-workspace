@@ -4,12 +4,11 @@
 
 const MODE = process.env.NODE_ENV;
 const isNoCache = process.env._CACHE === "false";
-const isTest = process.env._TEST === "true";
 
 module.exports = {
   MODE,
   isNoCache,
-  isTest,
+  isTest: MODE === "test",
   isDev: MODE === "development",
   isProd: MODE === "production",
 };

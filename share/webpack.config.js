@@ -16,6 +16,7 @@ module.exports = {
     path: resolve(__dirname, "cjs"),
     library: { type: "commonjs2" },
     filename: "index.js",
+    clean: true,
   },
   experiments: { outputModule: false },
   plugins: [
@@ -27,7 +28,7 @@ module.exports = {
     }),
   ],
   optimization: _optimization(),
-  devtool: isProd ? "source-map" : "eval-source-map",
+  devtool: isProd ? "hidden-nosources-source-map" : "eval-source-map",
   mode: isProd ? "production" : "development",
 };
 

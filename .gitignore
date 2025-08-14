@@ -1,7 +1,7 @@
 node_modules/
 
 .vscode/
-_config/
+*_config*
 log/
 
 # 忽略 bundle

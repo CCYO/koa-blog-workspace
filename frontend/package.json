@@ -5,7 +5,8 @@
   "scripts": {
     "devServer": "cross-env NODE_ENV=development webpack serve --config webpack/webpack.dev.js",
     "build:test": "cross-env NODE_ENV=test webpack --config webpack/webpack.test.js",
-    "build:prod": "cross-env NODE_ENV=production webpack --config webpack/webpack.prod.js"
+    "build:prod": "cross-env NODE_ENV=production webpack --config webpack/webpack.prod.js",
+    "tt": "cross-env NODE_ENV=production node tt.js"
   },
   "author": "",
   "license": "ISC",
@@ -32,6 +33,7 @@
     "cross-env": "^10.0.0",
     "css-loader": "^7.1.2",
     "css-minimizer-webpack-plugin": "^7.0.2",
+    "ejs": "^3.1.10",
     "esbuild": "^0.25.8",
     "favicons-webpack-plugin": "^6.0.1",
     "glob": "^11.0.3",

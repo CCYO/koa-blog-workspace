@@ -12,9 +12,9 @@ const relativeTime = require("dayjs/plugin/relativeTime");
 require("dayjs/locale/zh-tw");
 
 /* CONTROLLER ----------------------------------------------------------------------------- */
-const C_User = require("../controller/user");
-const C_Blog = require("../controller/blog");
-const C_Comment = require("../controller/comment");
+const C_User = require("./user");
+const C_Blog = require("./blog");
+const C_Comment = require("./comment");
 
 /* SERVER     ----------------------------------------------------------------------------- */
 const News = require("../server/news");

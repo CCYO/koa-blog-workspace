@@ -2,6 +2,8 @@ const nodemailer = require("nodemailer");
 const { GMAIL } = require("../_config");
 
 module.exports = async function (email, code) {
+  // nodemailer 文檔：https://nodemailer.com/usage/using-gmail/
+  // google 文檔：https://support.google.com/mail/answer/185833?hl=en
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {

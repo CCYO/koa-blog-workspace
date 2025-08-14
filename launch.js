@@ -7,24 +7,23 @@ const PORT = {
   DEBUG_FRONTEND: process.env.DEBUG_FRONTEND || 9222,
   DEBUG_BACKEND: process.env.DEBUG_BACKEND || 9223,
 };
-const isTEST = process.env.NODE_ENV === "test" ? true : false;
 
 const NPM = {
   BUILD: "[Webpack / Share]",
-  FRONTEND: isTEST ? "[Webpack / Frontend]" : "[Webpack / devServer]",
+  FRONTEND: "[Webpack / Frontend]",
   BACKEND: "[Nodemon / NodeJS]",
 };
 
 let backendLock = false;
 
-const backend = () => {
+const backend = (env) => {
   if (backendLock) {
     return;
   }
   backendLock = true;
 
   go({
-    command: isTEST ? ["run", "test:backend"] : ["run", "dev:backend"],
+    command: ["run", `${env}:backend`],
     prefix: NPM.BACKEND,
     endPattern: /NODE\: v\d+\.\d+\.\d+, MODE/,
     stdio: "pipe",
@@ -33,12 +32,12 @@ const backend = () => {
   });
 };
 
-const frontend = () => {
+const frontend = (env) => {
   go({
-    command: isTEST ? ["run", "test:frontend"] : ["run", "dev:frontend"],
+    command: ["run", `${env}:frontend`],
     prefix: NPM.FRONTEND,
     endPattern: /webpack \d+\.\d+\.\d+ compiled/,
-    callback: backend,
+    callback: () => backend(env),
     stdio: "pipe",
     shell: true, // 兼容 Windows
     env: { ...process.env, FORCE_COLOR: "1" }, // 強制啟用顏色
@@ -46,12 +45,12 @@ const frontend = () => {
   });
 };
 
-const build = () => {
+const build = (env) => {
   go({
-    command: isTEST ? ["run", "test:share"] : ["run", "dev:share"],
+    command: ["run", `${env}:share`],
     prefix: NPM.BUILD,
     endPattern: /webpack \d+\.\d+\.\d+ compiled/,
-    callback: frontend,
+    callback: () => frontend(env),
     stdio: "pipe",
     shell: true, // 兼容 Windows
     env: { ...process.env, FORCE_COLOR: "1" }, // 強制啟用顏色
@@ -59,7 +58,7 @@ const build = () => {
   });
 };
 
-build();
+build(process.env.NODE_ENV === "development" ? "dev" : "test");
 
 // 處理stdin
 function handleStdin(source, colorFn) {
@@ -109,17 +108,15 @@ function go({
   }
   const process = spawn("npm", command, options);
 
-  if (options.stdio === "pipe") {
-    handleStdin(prefix, chalk.bgGray)("START");
-    process.stderr.on("data", (data) => handleStderr(prefix, data));
-    process.stdout.on("data", (data) => {
-      handleStdin(prefix, chalk.bgBlue)(data);
-      if (/Compiling (Webpack|Build)/.test(data)) {
-        handleStdin(prefix, chalk.bgBlue)("WEBPACK 打包中.....");
-      } else if (endPattern.test(data)) {
-        handleStdin(prefix, chalk.bgGray)("OK");
-        callback && callback();
-      }
-    });
-  }
+  handleStdin(prefix, chalk.bgGray)("START");
+  process.stderr.on("data", (data) => handleStderr(prefix, data));
+  process.stdout.on("data", (data) => {
+    handleStdin(prefix, chalk.bgBlue)(data);
+    if (/Compiling (Webpack|Build)/.test(data)) {
+      handleStdin(prefix, chalk.bgBlue)("WEBPACK 打包中.....");
+    } else if (endPattern.test(data)) {
+      handleStdin(prefix, chalk.bgGray)("OK");
+      callback && callback();
+    }
+  });
 }

@@ -7,6 +7,7 @@ const { MyErr, ErrModel } = require("../utils/model");
 async function middleware(ctx, next) {
   try {
     await next();
+    console.log(`${ctx.status}|${ctx.path}---又改`);
     if (ctx.status === 404) {
       if (ctx.header.accept && ~ctx.header.accept.indexOf("html")) {
         ctx.redirect(`/permission/${ERR_RES.SERVER.RESPONSE.ERR_404.errno}`);

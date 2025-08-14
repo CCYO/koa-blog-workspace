@@ -24,16 +24,16 @@ router.use(ws.routes());
 /**
  * @description index -> square
  */
-router.get("/", (ctx) => {
+router.get("/", async (ctx) => {
   ctx.redirect("/square");
 });
 
 /**
  * @description test error
  */
-if (ENV.isTest) {
+if (!ENV.isProd) {
   // 會自動處理 HEAD 請求
-  router.get("/wait-on", async (ctx, next) => {
+  router.get("/wait-on", async (ctx) => {
     ctx.status = 200;
     // 如果是 GET 請求會發送，HEAD 請求會忽略
     ctx.body = "OK";
@@ -45,16 +45,16 @@ if (ENV.isTest) {
       ctx.redirect("/public/html/bundle-report.html");
     }
   });
-  router.get("/api/error", () => {
+  router.get("/api/error", async () => {
     throw new MyErr(ERR_RES.SERVER.RESPONSE.TEST);
   });
-  router.get("/api/needLogin", (ctx) => {
+  router.get("/api/needLogin", async (ctx) => {
     ctx.body = new ErrModel(ERR_RES.SERVER.RESPONSE.NO_LOGIN);
   });
-  router.get("/api/newsNoLogin", (ctx) => {
+  router.get("/api/newsNoLogin", async (ctx) => {
     ctx.body = new ErrModel(ERR_RES.NEWS.READ.NO_LOGIN);
   });
-  router.get("/view/error", () => {
+  router.get("/view/error", async () => {
     throw new MyErr(ERR_RES.SERVER.RESPONSE.TEST);
   });
 }
