@@ -9,6 +9,8 @@ let blog = require("./blog");
 let comment = require("./comment");
 let news = require("./news");
 let user = require("./user");
+let line = require("./line");
+let dialogflow = require("./dialogflow");
 let report = require("./report");
 
 const router = new Router({ prefix: "/api" });
@@ -20,5 +22,7 @@ router.use(blog.routes());
 router.use(comment.routes());
 router.use(news.routes());
 router.use(user.routes());
+router.use(line.routes());
+router.use(dialogflow.routes());
 
 module.exports = router;

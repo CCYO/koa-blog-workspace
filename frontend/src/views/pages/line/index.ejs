@@ -1,15 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-tw">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <!-- 傳入 title -->
+  <%- include('../wedgets/header/index', { top_script: '__INJECT_TOP_SCRIPT__', title}) %>
 </head>
 
 <body>
-  LINE 練手作品
-
+  <%- include('../wedgets/pageLoading/index') %>
+  <%- include('../wedgets/navbar/index') %>
+  <main class="container-md" style="display: none;">
+    <div class="card">
+      <div class="card-header">
+        <h3>歡迎使用久坐提醒小助手</h3>
+      </div>
+      <div class="card-body">
+        <p>請使用 Line 帳號登入，我們會定時提醒您起身活動！ok</p>
+        <a href="/api/line/authorization" class="line-button">使用 Line 登入</a>
+      </div>
+    </div>
+  </main>
+  <%- include('../wedgets/footer/index') %>
 </body>
 
 </html>

@@ -1,5 +1,5 @@
 /* CSS        ----------------------------------------------------------------------------- */
-import "@css/square.scss";
+import "@css/line.scss";
 
 /* COMMON     ----------------------------------------------------------------------------- */
 import G from "../common";
@@ -9,5 +9,5 @@ await G.initPage(initMain);
 
 async function initMain() {
   // 備用
-  console.log("這是square");
+  console.log("這是line OK");
 }

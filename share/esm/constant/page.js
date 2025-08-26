@@ -57,4 +57,10 @@ export default {
     },
     PAGE_NAME: "SETTING",
   },
+  LINE: {
+    ACTIVE: {
+      _: "line",
+    },
+    PAGE_NAME: "LINE",
+  },
 };
