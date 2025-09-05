@@ -3,6 +3,7 @@ node_modules/
 .vscode/
 *_config*
 log/
+_
 
 # 忽略 bundle
 dist/

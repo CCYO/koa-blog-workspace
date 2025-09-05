@@ -8,7 +8,7 @@ const { resolve } = require("path");
 /* CONFIG     ----------------------------------------------------------------------------- */
 //  設定環境變量
 const dotenv = require("dotenv");
-console.log("process.env.NODE_ENV ==> ", process.env.NODE_ENV);
+
 // 載入共用配置
 dotenv.config({ path: resolve(__dirname, `../_config/.env`) });
 // 載入當前模式配置
@@ -16,19 +16,14 @@ const dotenv_config = resolve(
   __dirname,
   `../_config/.env.${process.env.NODE_ENV}`
 );
-console.log(
-  "fs.existsSync(dotenv_config)",
-  dotenv_config,
-  fs.existsSync(dotenv_config)
-);
-console.log(2, process.env.NODE_ENV, process.env.NODE_PORT);
+
 if (fs.existsSync(dotenv_config)) {
   dotenv.config({
     path: dotenv_config,
     override: true,
   });
 }
-console.log(3, process.env.NODE_ENV, process.env.NODE_PORT);
+
 /* NODEJS     ----------------------------------------------------------------------------- */
 const http = require("http");
 
